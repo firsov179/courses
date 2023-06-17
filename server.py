@@ -1,10 +1,8 @@
 import json
 
-
 from flask import Flask, Response
 from flask_restful import Api, Resource, reqparse
-
-from Database import database
+from DatabaseConnector import select_from_db, insert_to_db
 
 # initialization of app and RESTful api
 app = Flask(__name__)
@@ -13,7 +11,7 @@ api = Api()
 # add handlers
 
 @app.route('/courses/<int:courseId>', methods=['GET'])
-def get_course(courseId):
+def get_course(courseId: int):
     # request to database - find course with courseId 
     query = f'''SELECT * FROM courses WHERE Id={courseId}'''
     info = select_from_db(query)    
@@ -60,7 +58,7 @@ def post_enrollment():
     return Response("Added", 200)
 
 @app.route('/enrollments/<int:studentId>', methods=['GET'])
-def get_student_enrollment(studentId):  
+def get_student_enrollment(studentId: int):  
     
     # request to database - get student enrollments
     query = f'''SELECT * FROM enrollments WHERE studentId={studentId}'''
@@ -73,7 +71,7 @@ def get_student_enrollment(studentId):
     return Response(json.dumps(res), 200)
     
 @app.route('/enrollments/<int:enrollmentId>', methods=['DELETE'])
-def delete_enrollment(studentId):  
+def delete_enrollment(studentId: int):  
     query = f'''SELECT * FROM enrollments WHERE enrollmentId={enrollmentId}'''
     info = select_from_db(query)   # check enrollmentId
     if len(info) == 0:
